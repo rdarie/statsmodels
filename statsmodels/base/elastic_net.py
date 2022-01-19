@@ -166,7 +166,7 @@ def fit_elasticnet(model, method="coord_descent", maxiter=100,
         for k in range(k_exog)]
 
     converged = False
-
+    convergence_history = []
     for itr in range(maxiter):
 
         # Sweep through the parameters
@@ -205,6 +205,7 @@ def fit_elasticnet(model, method="coord_descent", maxiter=100,
 
         # Check for convergence
         pchange = np.max(np.abs(params - params_save))
+        convergence_history.append([itr, k, pchange])
         if pchange < cnvrg_tol:
             converged = True
             break
@@ -261,7 +262,7 @@ def fit_elasticnet(model, method="coord_descent", maxiter=100,
     refit.regularized = True
     refit.converged = converged
     refit.method = method
-    refit.fit_history = {'iteration': itr + 1}
+    refit.fit_history = {'iteration': itr + 1, 'convergence_history': convergence_history}
 
     # Restore df in model class, see issue #1723 for discussion.
     model.df_model, model.df_resid = p, q
