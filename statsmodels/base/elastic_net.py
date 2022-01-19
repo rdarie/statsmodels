@@ -202,10 +202,11 @@ def fit_elasticnet(model, method="coord_descent", maxiter=100,
             if itr > 0 and np.abs(params[k]) < zero_tol:
                 params_zero[k] = True
                 params[k] = 0.
+            
+            convergence_history.append([itr, k, func(params[k], model_1var)])
 
         # Check for convergence
         pchange = np.max(np.abs(params - params_save))
-        convergence_history.append([itr, k, func(params[k], model_1var)])
         if pchange < cnvrg_tol:
             converged = True
             break
